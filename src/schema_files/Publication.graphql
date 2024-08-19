@@ -1,0 +1,49 @@
+query Publication($host: String) {
+  publication(host: $host) {
+    id
+    descriptionSEO
+    displayTitle
+    title
+    isTeam
+    favicon
+    followersCount
+    preferences {
+      logo
+    }
+    ogMetaData {
+      image
+    }
+    links {
+      twitter
+      instagram
+      github
+      website
+      hashnode
+      youtube
+      linkedin
+      mastodon
+    }
+    posts(first: 2) {
+      edges {
+        node {
+          id
+          slug
+          title
+          brief
+          coverImage {
+            url
+          }
+        }
+      }
+    }
+    author {
+      name
+      bio {
+        html
+        text
+      }
+      profilePicture
+      location
+    }
+  }
+}
