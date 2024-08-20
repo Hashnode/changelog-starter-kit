@@ -469,6 +469,13 @@
   dependencies:
     regenerator-runtime "^0.14.0"
 
+"@babel/runtime@^7.12.5":
+  version "7.25.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.25.0.tgz#3af9a91c1b739c569d5d80cc917280919c544ecb"
+  integrity sha512-7dRy4DwXwtzBrPbZflqxnvfxLF8kdZXPkhymtDeFoFqE6ldzjQFgYTtYIFARcLEYDrqfBfYcZt1WqFxRoyC9Rw==
+  dependencies:
+    regenerator-runtime "^0.14.0"
+
 "@babel/template@^7.18.10", "@babel/template@^7.20.7", "@babel/template@^7.22.15", "@babel/template@^7.24.0":
   version "7.24.0"
   resolved "https://registry.npmjs.org/@babel/template/-/template-7.24.0.tgz"
@@ -1314,18 +1321,6 @@
   dependencies:
     "@tanstack/query-core" "5.36.1"
 
-"@tanstack/react-virtual@^3.5.0":
-  version "3.5.0"
-  resolved "https://registry.npmjs.org/@tanstack/react-virtual/-/react-virtual-3.5.0.tgz"
-  integrity sha512-rtvo7KwuIvqK9zb0VZ5IL7fiJAEnG+0EiFZz8FUOs+2mhGqdGmjKIaT1XU7Zq0eFqL0jonLlhbayJI/J2SA/Bw==
-  dependencies:
-    "@tanstack/virtual-core" "3.5.0"
-
-"@tanstack/virtual-core@3.5.0":
-  version "3.5.0"
-  resolved "https://registry.npmjs.org/@tanstack/virtual-core/-/virtual-core-3.5.0.tgz"
-  integrity sha512-KnPRCkQTyqhanNC0K63GBG3wA8I+D1fQuVnAvcBF8f13akOKeQp1gSbu6f77zCxhEk727iV5oQnbHLYzHrECLg==
-
 "@types/js-yaml@^4.0.0":
   version "4.0.9"
   resolved "https://registry.npmjs.org/@types/js-yaml/-/js-yaml-4.0.9.tgz"
@@ -2123,6 +2118,11 @@ concat-map@0.0.1:
   version "0.0.1"
   resolved "https://registry.npmjs.org/concat-map/-/concat-map-0.0.1.tgz"
   integrity sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==
+
+"consolidated-events@^1.1.0 || ^2.0.0":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/consolidated-events/-/consolidated-events-2.0.2.tgz#da8d8f8c2b232831413d9e190dc11669c79f4a91"
+  integrity sha512-2/uRVMdRypf5z/TW/ncD/66l75P5hH2vM/GR8Jf8HLc2xnfJtmina6F6du8+v4Z2vTrMo7jC+W1tmEEuuELgkQ==
 
 constant-case@^3.0.4:
   version "3.0.4"
@@ -4372,7 +4372,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@^15.8.1:
+prop-types@^15.0.0, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.npmjs.org/prop-types/-/prop-types-15.8.1.tgz"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -4420,6 +4420,21 @@ react-is@^16.13.1:
   version "16.13.1"
   resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
+
+"react-is@^17.0.1 || ^18.0.0":
+  version "18.3.1"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.3.1.tgz#e83557dc12eae63a99e003a46388b1dcbb44db7e"
+  integrity sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==
+
+react-waypoint@^10.3.0:
+  version "10.3.0"
+  resolved "https://registry.yarnpkg.com/react-waypoint/-/react-waypoint-10.3.0.tgz#fcc60e86c6c9ad2174fa58d066dc6ae54e3df71d"
+  integrity sha512-iF1y2c1BsoXuEGz08NoahaLFIGI9gTUAAOKip96HUmylRT6DUtpgoBPjk/Y8dfcFVmfVDvUzWjNXpZyKTOV0SQ==
+  dependencies:
+    "@babel/runtime" "^7.12.5"
+    consolidated-events "^1.1.0 || ^2.0.0"
+    prop-types "^15.0.0"
+    react-is "^17.0.1 || ^18.0.0"
 
 react@^18:
   version "18.3.1"

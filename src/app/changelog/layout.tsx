@@ -4,9 +4,11 @@ import {
   usePostsQuery,
 } from '../../../generated/graphq';
 import getQueryClient from '@/utils/getQueryClient';
+import Script from 'next/script';
+import '../../utils/highlightjs.css';
 
 const host = process.env.NEXT_PUBLIC_HASHNODE_PUBLICATION_HOST as string;
-const pageSize = 10;
+const pageSize = 2;
 const page = 1;
 
 export default async function BlogLayout({
@@ -31,8 +33,11 @@ export default async function BlogLayout({
   });
 
   return (
-    <HydrationBoundary state={dehydrate(getQueryClient())}>
-      {children}
-    </HydrationBoundary>
+    <>
+      <HydrationBoundary state={dehydrate(getQueryClient())}>
+        {children}
+      </HydrationBoundary>
+      <Script src='../../../utils/highlight.js' />
+    </>
   );
 }

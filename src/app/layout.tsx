@@ -114,11 +114,10 @@ export default async function RootLayout({
 
   return (
     <html lang='en'>
-      <body className={`${inter.className} bg-slate-300 dark:bg-slate-950`}>
+      <body className={`${inter.className} dark:bg-slate-950`}>
         <ReactQueryProvider>
           <HydrationBoundary state={dehydrate(queryClient)}>
             {children}
-            <Navbar />
           </HydrationBoundary>
         </ReactQueryProvider>
       </body>

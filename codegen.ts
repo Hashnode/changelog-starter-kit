@@ -1,8 +1,9 @@
 require('dotenv').config();
 import { CodegenConfig } from '@graphql-codegen/cli';
+const schema = process.env.NEXT_PUBLIC_HASHNODE_GQL_ENDPOINT;
 
 const config: CodegenConfig = {
-  schema: process.env.NEXT_PUBLIC_HASHNODE_GQL_ENDPOINT,
+  schema,
   documents: ['src/**/*.graphql'],
   generates: {
     './generated/graphq.ts': {

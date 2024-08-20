@@ -2,7 +2,6 @@
 import { Container } from '@/components/Container';
 import { usePostQuery } from '../../../../generated/graphq';
 import { useQuery } from '@tanstack/react-query';
-import { ContactMe } from '@/components/ContactMe';
 import { loadIframeResizer } from '@/utils/services/embed';
 import { useEffect, useState } from 'react';
 import { useEmbeds } from '../../../../hooks/useEmbeds';
@@ -68,7 +67,7 @@ export default function BlogContent({ params }: { params: { slug: string } }) {
 
   return (
     <Container>
-      <article className='w-full rounded-3xl bg-white px-4 py-8 shadow-md md:px-8 dark:border dark:border-slate-800 dark:bg-slate-900'>
+      <article className='w-full px-4 py-8 md:px-8'>
         <div className='mb-4 flex w-full flex-col gap-5 text-slate-950 dark:text-zinc-300'>
           <h1 className='mb-2 w-full text-center text-2xl font-bold md:text-3xl dark:text-zinc-100'>
             {post.title}
@@ -108,7 +107,6 @@ export default function BlogContent({ params }: { params: { slug: string } }) {
           </div>
         )}
       </article>
-      <ContactMe />
     </Container>
   );
 }

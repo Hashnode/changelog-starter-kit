@@ -3,13 +3,30 @@ query Posts($host: String, $pageSize: Int!, $page: Int!) {
     postsViaPage(pageSize: $pageSize, page: $page) {
       nodes {
         id
+        url
         slug
         title
-        views
+        subtitle
+        brief
+        publishedAt
+        hasLatexInPost
+        tags {
+          id
+          name
+          slug
+        }
+        author {
+          name
+          username
+          profilePicture
+        }
         coverImage {
           url
         }
-        publishedAt
+        content {
+          html
+          markdown
+        }
       }
       pageInfo {
         hasNextPage

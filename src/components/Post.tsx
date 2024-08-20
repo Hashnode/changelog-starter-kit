@@ -1,27 +1,49 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { formatDate } from '@/utils/consts/format-date';
-import { ArrowTrendingUpIcon, ClockIcon } from '@heroicons/react/24/outline';
 import { ImagePlaceholder } from './ImagePlaceholder';
 import { resizeImage } from '@/utils/image';
 import { getBlurDataUrl } from '@/utils/getBlurDataUrl';
+import { useEffect, useState } from 'react';
+import { useEmbeds } from '../../hooks/useEmbeds';
+import { loadIframeResizer } from '@/utils/services/embed';
+import { triggerCustomWidgetEmbed } from '@/utils/trigger-custom-widget-embed';
+import handleMathJax from '@/utils/handle-math-jax';
+import { MarkdownToHtml } from './MarkdownToHtml';
 
 interface PostProps {
   postInfo:
     | {
-        __typename?: 'Post' | undefined;
+        __typename?: 'Post';
         id: string;
+        url: string;
         slug: string;
         title: string;
-        views: number;
+        subtitle?: string | null;
+        brief: string;
         publishedAt: any;
-        coverImage?:
-          | {
-              __typename?: 'PostCoverImage' | undefined;
-              url: string;
-            }
-          | null
-          | undefined;
+        hasLatexInPost: boolean;
+        tags?: Array<{
+          __typename?: 'Tag';
+          id: string;
+          name: string;
+          slug: string;
+        }> | null;
+        author: {
+          __typename?: 'User';
+          name: string;
+          username: string;
+          profilePicture?: string | null;
+        };
+        coverImage?: {
+          __typename?: 'PostCoverImage';
+          url: string;
+        } | null;
+        content: {
+          __typename?: 'Content';
+          html: string;
+          markdown: string;
+        };
       }
     | undefined;
 }
@@ -29,9 +51,24 @@ interface PostProps {
 export const Post = (props: PostProps) => {
   const { postInfo } = props;
 
-  if (!postInfo) return null;
+  const [canLoadEmbeds, setCanLoadEmbeds] = useState(false);
+  const [, setMobMount] = useState(false);
+  useEmbeds({ enabled: canLoadEmbeds });
 
-  const postImageSrc = postInfo.coverImage?.url
+  useEffect(() => {
+    if (screen.width <= 425) {
+      setMobMount(true);
+    }
+
+    if (!postInfo) return;
+    (async () => {
+      await loadIframeResizer();
+      triggerCustomWidgetEmbed(postInfo.id.toString());
+      setCanLoadEmbeds(true);
+    })();
+  }, [postInfo]);
+
+  const postImageSrc = postInfo?.coverImage?.url
     ? resizeImage(postInfo.coverImage.url, {
         w: 1040,
         h: 585,
@@ -41,12 +78,46 @@ export const Post = (props: PostProps) => {
 
   const blurDataURL = postImageSrc && getBlurDataUrl(postImageSrc);
 
+  if (postInfo && postInfo.hasLatexInPost) {
+    setTimeout(() => {
+      handleMathJax(true);
+    }, 500);
+  }
+
+  if (!postInfo) return null;
   return (
-    <Link
-      href={`/blog/${postInfo.slug}`}
-      className='flex w-full flex-col items-center gap-4 rounded-xl border border-zinc-100 px-2 py-2 hover:border-zinc-200 sm:flex-row dark:border-slate-800 dark:hover:border-slate-700'
-    >
-      <div className='flex aspect-video w-full overflow-hidden rounded-lg sm:max-w-52'>
+    <div className='relative flex w-full flex-col pl-16'>
+      <Link
+        href={`/changelog/${postInfo.slug}`}
+        className='mb-5 w-full text-3xl font-semibold dark:text-zinc-100'
+      >
+        {postInfo.title}
+      </Link>
+      <div className='mb-5 flex flex-row items-center gap-3'>
+        <a
+          href={`https://hashnode.com/@${postInfo.author?.username}`}
+          target='_blank'
+          className='flex flex-row items-center gap-3'
+        >
+          <div className='flex aspect-square w-9'>
+            <Image
+              src={postInfo.author?.profilePicture || ''}
+              alt='Profile Picture'
+              width={36}
+              height={36}
+              className='flex-1 rounded-full'
+            />
+          </div>
+          <p className='font-semibold dark:text-zinc-100'>
+            {postInfo.author?.name}
+          </p>
+        </a>
+        &#183;
+        <time className='text-slate-800 dark:text-zinc-300'>
+          {formatDate(postInfo.publishedAt)}
+        </time>
+      </div>
+      <div className='mb-6 flex aspect-video w-full overflow-hidden rounded-lg'>
         {postInfo.coverImage?.url ? (
           <Image
             src={postImageSrc}
@@ -61,21 +132,10 @@ export const Post = (props: PostProps) => {
           <ImagePlaceholder />
         )}
       </div>
-      <div className='flex w-full flex-col px-3 text-slate-950 dark:text-zinc-300'>
-        <h3 className='mb-5 line-clamp-3 text-xl font-semibold md:text-2xl dark:text-zinc-100'>
-          {postInfo.title}
-        </h3>
-        <div className='mb-3 flex w-full flex-row justify-between text-xs'>
-          <p className='flex flex-row items-center gap-1'>
-            <ClockIcon className='h-4 w-4' />
-            {formatDate(postInfo.publishedAt)}
-          </p>
-          <p className='flex flex-row items-center gap-2'>
-            <ArrowTrendingUpIcon className='h-4 w-4' />
-            {postInfo.views}
-          </p>
-        </div>
-      </div>
-    </Link>
+      {postInfo.content.markdown && (
+        <MarkdownToHtml contentMarkdown={postInfo.content.markdown} />
+      )}
+      <div className='absolute -left-2 top-3 aspect-square w-4 rounded-full bg-slate-300 dark:bg-slate-700'></div>
+    </div>
   );
 };
