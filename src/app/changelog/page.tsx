@@ -54,7 +54,7 @@ export default function Blog() {
           <h1 className='text-3xl font-bold md:text-4xl dark:text-zinc-100'>
             Hashnode Changelog
           </h1>
-          <p className='w-[560px] font-light'>
+          <p className='font-light md:w-[560px]'>
             Explore the latest updates, improvements, and bug fixes with
             Hashnode Changelogs. Stay informed about the evolving features and
             enhancements to enhance your coding experience.
@@ -67,13 +67,13 @@ export default function Blog() {
           </p>
         )}
         {posts.length > 0 && (
-          <div className='relative flex flex-col gap-20 border-l border-slate-200 dark:border-slate-800'>
+          <div className='relative flex flex-col gap-20 border-slate-200 sm:border-l dark:border-slate-800'>
             {posts.map((post, index) => (
               <>
-                <Post key={post?.id} postInfo={post} />
                 {index === 0 && (
                   <div className='absolute -left-2 -top-1 hidden aspect-square w-4 bg-white sm:block dark:bg-slate-800' />
                 )}
+                <Post key={post?.id} postInfo={post} />
               </>
             ))}
             {isFetchingNextPage && (

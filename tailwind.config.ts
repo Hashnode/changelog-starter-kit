@@ -52,9 +52,6 @@ const config: Config = {
           },
         },
       }),
-      screens: {
-        sm: '540px',
-      },
     },
   },
   plugins: [require('@tailwindcss/typography')],

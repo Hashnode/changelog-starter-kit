@@ -86,7 +86,8 @@ export const Post = (props: PostProps) => {
 
   if (!postInfo) return null;
   return (
-    <div className='relative flex w-full flex-col pl-16'>
+    <div className='relative flex w-full flex-col px-2 sm:px-0 sm:pl-20'>
+      <div className='absolute -left-2 top-3 hidden aspect-square w-4 rounded-full bg-slate-300 sm:block dark:bg-slate-700'></div>
       <Link
         href={`/changelog/${postInfo.slug}`}
         className='mb-5 w-full text-3xl font-semibold dark:text-zinc-100'
@@ -135,7 +136,6 @@ export const Post = (props: PostProps) => {
       {postInfo.content.markdown && (
         <MarkdownToHtml contentMarkdown={postInfo.content.markdown} />
       )}
-      <div className='absolute -left-2 top-3 aspect-square w-4 rounded-full bg-slate-300 dark:bg-slate-700'></div>
     </div>
   );
 };
