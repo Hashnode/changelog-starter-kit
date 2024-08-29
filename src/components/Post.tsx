@@ -89,7 +89,7 @@ export const Post = (props: PostProps) => {
     <div className='relative flex w-full flex-col px-2 sm:px-0 sm:pl-20'>
       <div className='absolute -left-2 top-3 hidden aspect-square w-4 rounded-full bg-slate-300 sm:block dark:bg-slate-700'></div>
       <Link
-        href={`/changelog/${postInfo.slug}`}
+        href={`/preview/${postInfo.slug}`}
         className='mb-5 w-full text-3xl font-semibold dark:text-zinc-100'
       >
         {postInfo.title}

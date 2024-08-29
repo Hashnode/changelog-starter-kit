@@ -15,6 +15,7 @@ export type Scalars = {
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
   DateTime: { input: any; output: any; }
+  JSONObject: { input: any; output: any; }
   ObjectId: { input: any; output: any; }
   TimeZone: { input: any; output: any; }
   URL: { input: any; output: any; }
@@ -1198,6 +1199,18 @@ export enum DeviceType {
   Tablet = 'TABLET'
 }
 
+/** The input for disabling AI search for a documentation project */
+export type DisableDocumentationProjectAiSearchInput = {
+  /** The ID of the documentation project */
+  projectId: Scalars['ID']['input'];
+};
+
+/** The response to disabling AI search for a documentation project */
+export type DisableDocumentationProjectAiSearchPayload = {
+  __typename?: 'DisableDocumentationProjectAISearchPayload';
+  project?: Maybe<DocumentationProject>;
+};
+
 export type DisableDocumentationProjectHeadlessCmsInput = {
   projectId: Scalars['ID']['input'];
 };
@@ -1254,6 +1267,10 @@ export type DocsVisitors = {
 
 export type DocumentationApiReference = IGuide & {
   __typename?: 'DocumentationApiReference';
+  /** The parsed Swagger Definition of the API Reference. */
+  definition?: Maybe<Scalars['JSONObject']['output']>;
+  /** The base64 encoded gzip compressed string of the parsed OpenAPI Definition of the API Reference. */
+  definitionV2?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   lastModified: Scalars['DateTime']['output'];
   name: Scalars['String']['output'];
@@ -1417,6 +1434,7 @@ export type DocumentationPageDraft = {
 
 export type DocumentationProject = Node & {
   __typename?: 'DocumentationProject';
+  ai?: Maybe<DocumentationProjectAiPreference>;
   analytics: DocumentationProjectAnalytics;
   appearance: DocumentationProjectAppearance;
   createdAt: Scalars['DateTime']['output'];
@@ -1445,6 +1463,7 @@ export type DocumentationProject = Node & {
   /** A user search to find users with a specific status */
   searchUsers: DocumentationProjectSearchUserConnection;
   settings: DocumentationProjectSettings;
+  subscription?: Maybe<DocumentationProjectSubscription>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   /** Url of the documentation project. */
   url: Scalars['String']['output'];
@@ -1478,6 +1497,30 @@ export type DocumentationProjectPublishedGuideArgs = {
 
 export type DocumentationProjectSearchUsersArgs = {
   input: DocumentationProjectSearchUsersInput;
+};
+
+export type DocumentationProjectAiPreference = {
+  __typename?: 'DocumentationProjectAIPreference';
+  /** The prompts for the documentation project. These prompts are shown to the user when AI Search chatbot is opened. */
+  prompts: Array<DocumentationProjectAiPrompt>;
+  /** The settings for the AI feature. */
+  settings: DocumentationProjectAiSettings;
+};
+
+export type DocumentationProjectAiPrompt = {
+  __typename?: 'DocumentationProjectAIPrompt';
+  /** The date the prompt was created. */
+  createdAt: Scalars['DateTime']['output'];
+  /** The ID of the prompt. */
+  id: Scalars['ID']['output'];
+  /** The prompt text. */
+  prompt: Scalars['String']['output'];
+};
+
+export type DocumentationProjectAiSettings = {
+  __typename?: 'DocumentationProjectAISettings';
+  /** A flag to indicate if the AI search feature is enabled. */
+  isSearchEnabled: Scalars['Boolean']['output'];
 };
 
 export type DocumentationProjectAnalytics = {
@@ -1689,6 +1732,11 @@ export type DocumentationProjectPendingInviteConnection = PageConnection & {
   totalDocuments: Scalars['Int']['output'];
 };
 
+export enum DocumentationProjectProductName {
+  Enterprise = 'ENTERPRISE',
+  Startup = 'STARTUP'
+}
+
 /** A connection for the user search result. */
 export type DocumentationProjectSearchUserConnection = PageConnection & {
   __typename?: 'DocumentationProjectSearchUserConnection';
@@ -1729,6 +1777,20 @@ export type DocumentationProjectSettingsInput = {
   allowHashnodeLogin?: InputMaybe<Scalars['Boolean']['input']>;
   allowRobots?: InputMaybe<Scalars['Boolean']['input']>;
 };
+
+export type DocumentationProjectSubscription = {
+  __typename?: 'DocumentationProjectSubscription';
+  nextBillingCycle?: Maybe<Scalars['DateTime']['output']>;
+  productName: DocumentationProjectProductName;
+  status: DocumentationProjectSubscriptionStatus;
+};
+
+export enum DocumentationProjectSubscriptionStatus {
+  Active = 'ACTIVE',
+  Canceled = 'CANCELED',
+  PastDue = 'PAST_DUE',
+  Unpaid = 'UNPAID'
+}
 
 export type DocumentationSection = IDocumentationNestableSidebarItem & IDocumentationSidebarItem & {
   __typename?: 'DocumentationSection';
@@ -1845,6 +1907,8 @@ export type Draft = Node & {
   /** The publication the draft belongs to. */
   publication?: Maybe<Publication>;
   publishAs?: Maybe<User>;
+  /** Returns the published post when the draft is published, returns null otherwise */
+  publishedPost?: Maybe<Post>;
   readTimeInMinutes: Scalars['Int']['output'];
   /** The date the draft is scheduled to be published. */
   scheduledDate?: Maybe<Scalars['DateTime']['output']>;
@@ -2024,6 +2088,18 @@ export type EmailNotificationPreferences = {
   newFollowersWeekly: Scalars['Boolean']['output'];
   /** Indicates if the user has opted in to receive the Hashnode Weekly newsletter. */
   weeklyNewsletterEmails: Scalars['Boolean']['output'];
+};
+
+/** The input for enabling AI search for a documentation project */
+export type EnableDocumentationProjectAiSearchInput = {
+  /** The ID of the documentation project */
+  projectId: Scalars['ID']['input'];
+};
+
+/** The response to enabling AI search for a documentation project */
+export type EnableDocumentationProjectAiSearchPayload = {
+  __typename?: 'EnableDocumentationProjectAISearchPayload';
+  project?: Maybe<DocumentationProject>;
 };
 
 export type EnableDocumentationProjectHeadlessCmsInput = {
@@ -2530,6 +2606,7 @@ export type IGuide = {
   id: Scalars['ID']['output'];
   lastModified: Scalars['DateTime']['output'];
   name: Scalars['String']['output'];
+  seo?: Maybe<Seo>;
   slug: Scalars['String']['output'];
   versionId?: Maybe<Scalars['String']['output']>;
 };
@@ -2785,7 +2862,11 @@ export type Mutation = {
   /** Deletes a role based invite. */
   deleteRoleBasedInvite: DeleteRoleBasedInvitePayload;
   deleteWebhook: DeleteWebhookPayload;
+  /** Mutation to disable AI search for a documentation project */
+  disableDocumentationProjectAISearch: DisableDocumentationProjectAiSearchPayload;
   disableDocumentationProjectHeadlessCms: DisableDocumentationProjectHeadlessCmsPayload;
+  /** Mutation to enable AI search for a documentation project */
+  enableDocumentationProjectAISearch: EnableDocumentationProjectAiSearchPayload;
   enableDocumentationProjectHeadlessCms: EnableDocumentationProjectHeadlessCmsPayload;
   /**
    * Will generate a authorization JWT to preview a docs project.
@@ -2852,6 +2933,8 @@ export type Mutation = {
   scheduleDraft: ScheduleDraftPayload;
   setDocumentationSidebarItemVisibility: SetDocumentationSidebarItemVisibilityPayload;
   subscribeToNewsletter: SubscribeToNewsletterPayload;
+  /** Mutation to sync documentation API reference definition */
+  syncDocumentationProjectApiDefinition: SyncDocumentationProjectApiDefinitionPayload;
   /** Toggle allowContributorEdits flag to allow or restrict external contributors to further edit published articles. */
   toggleAllowContributorEdits: ToggleAllowContributorEditsPayload;
   /**
@@ -2878,7 +2961,7 @@ export type Mutation = {
   updateDocumentationLink: UpdateDocumentationLinkPayload;
   updateDocumentationPageSettings: UpdateDocumentationPageSettingsPayload;
   updateDocumentationProjectSubdomain: UpdateDocumentationProjectSubdomainPayload;
-  /** Mutation to update a section in a guide  */
+  /** Mutation to update a section in a guide */
   updateDocumentationSection: UpdateDocumentationSectionPayload;
   updatePost: UpdatePostPayload;
   updateRedirectionRule: UpdateRedirectionRulePayload;
@@ -3013,8 +3096,18 @@ export type MutationDeleteWebhookArgs = {
 };
 
 
+export type MutationDisableDocumentationProjectAiSearchArgs = {
+  input: DisableDocumentationProjectAiSearchInput;
+};
+
+
 export type MutationDisableDocumentationProjectHeadlessCmsArgs = {
   input: DisableDocumentationProjectHeadlessCmsInput;
+};
+
+
+export type MutationEnableDocumentationProjectAiSearchArgs = {
+  input: EnableDocumentationProjectAiSearchInput;
 };
 
 
@@ -3215,6 +3308,11 @@ export type MutationSetDocumentationSidebarItemVisibilityArgs = {
 
 export type MutationSubscribeToNewsletterArgs = {
   input: SubscribeToNewsletterInput;
+};
+
+
+export type MutationSyncDocumentationProjectApiDefinitionArgs = {
+  input: SyncDocumentationProjectApiDefinitionInput;
 };
 
 
@@ -5664,6 +5762,23 @@ export type SubscribeToNewsletterPayload = {
   status?: Maybe<NewsletterSubscribeStatus>;
 };
 
+/** The input for syncing API reference definitions */
+export type SyncDocumentationProjectApiDefinitionInput = {
+  /** The ID of the docs API reference */
+  apiReferenceId: Scalars['ID']['input'];
+  /** The ID of the documentation project */
+  projectId: Scalars['ID']['input'];
+  /** The ID of the reference version */
+  versionId: Scalars['ID']['input'];
+};
+
+/** The response to syncing documentation project API Reference definition */
+export type SyncDocumentationProjectApiDefinitionPayload = {
+  __typename?: 'SyncDocumentationProjectApiDefinitionPayload';
+  /** Signifies if the mutation was successful. */
+  success: Scalars['Boolean']['output'];
+};
+
 export type TableOfContentsFeature = Feature & {
   __typename?: 'TableOfContentsFeature';
   /** Whether or not the user has chosen to show a table of contents on the post. */
@@ -6626,14 +6741,6 @@ export type PublicationQueryVariables = Exact<{
 
 export type PublicationQuery = { __typename?: 'Query', publication?: { __typename?: 'Publication', id: string, descriptionSEO?: string | null, displayTitle?: string | null, title: string, isTeam: boolean, favicon?: string | null, followersCount?: number | null, preferences: { __typename?: 'Preferences', logo?: string | null }, ogMetaData: { __typename?: 'OpenGraphMetaData', image?: string | null }, links?: { __typename?: 'PublicationLinks', twitter?: string | null, instagram?: string | null, github?: string | null, website?: string | null, hashnode?: string | null, youtube?: string | null, linkedin?: string | null, mastodon?: string | null } | null, posts: { __typename?: 'PublicationPostConnection', edges: Array<{ __typename?: 'PostEdge', node: { __typename?: 'Post', id: string, slug: string, title: string, brief: string, coverImage?: { __typename?: 'PostCoverImage', url: string } | null } }> }, author: { __typename?: 'User', name: string, profilePicture?: string | null, location?: string | null, bio?: { __typename?: 'Content', html: string, text: string } | null } } | null };
 
-export type StaticPageQueryVariables = Exact<{
-  host?: InputMaybe<Scalars['String']['input']>;
-  slug: Scalars['String']['input'];
-}>;
-
-
-export type StaticPageQuery = { __typename?: 'Query', publication?: { __typename?: 'Publication', staticPage?: { __typename?: 'StaticPage', id: string, title: string, slug: string, hidden: boolean, content: { __typename?: 'Content', markdown: string, html: string }, ogMetaData?: { __typename?: 'OpenGraphMetaData', image?: string | null } | null, seo?: { __typename?: 'SEO', title?: string | null, description?: string | null } | null } | null } | null };
-
 
 
 export const PostDocument = `
@@ -6905,71 +7012,3 @@ useInfinitePublicationQuery.getKey = (variables?: PublicationQueryVariables) => 
 
 
 usePublicationQuery.fetcher = (variables?: PublicationQueryVariables, options?: RequestInit['headers']) => fetchData<PublicationQuery, PublicationQueryVariables>(PublicationDocument, variables, options);
-
-export const StaticPageDocument = `
-    query StaticPage($host: String, $slug: String!) {
-  publication(host: $host) {
-    staticPage(slug: $slug) {
-      id
-      title
-      slug
-      content {
-        markdown
-        html
-      }
-      hidden
-      ogMetaData {
-        image
-      }
-      seo {
-        title
-        description
-      }
-    }
-  }
-}
-    `;
-
-export const useStaticPageQuery = <
-      TData = StaticPageQuery,
-      TError = unknown
-    >(
-      variables: StaticPageQueryVariables,
-      options?: Omit<UseQueryOptions<StaticPageQuery, TError, TData>, 'queryKey'> & { queryKey?: UseQueryOptions<StaticPageQuery, TError, TData>['queryKey'] }
-    ) => {
-    
-    return useQuery<StaticPageQuery, TError, TData>(
-      {
-    queryKey: ['StaticPage', variables],
-    queryFn: fetchData<StaticPageQuery, StaticPageQueryVariables>(StaticPageDocument, variables),
-    ...options
-  }
-    )};
-
-useStaticPageQuery.document = StaticPageDocument;
-
-useStaticPageQuery.getKey = (variables: StaticPageQueryVariables) => ['StaticPage', variables];
-
-export const useInfiniteStaticPageQuery = <
-      TData = InfiniteData<StaticPageQuery>,
-      TError = unknown
-    >(
-      variables: StaticPageQueryVariables,
-      options: Omit<UseInfiniteQueryOptions<StaticPageQuery, TError, TData>, 'queryKey'> & { queryKey?: UseInfiniteQueryOptions<StaticPageQuery, TError, TData>['queryKey'] }
-    ) => {
-    
-    return useInfiniteQuery<StaticPageQuery, TError, TData>(
-      (() => {
-    const { queryKey: optionsQueryKey, ...restOptions } = options;
-    return {
-      queryKey: optionsQueryKey ?? ['StaticPage.infinite', variables],
-      queryFn: (metaData) => fetchData<StaticPageQuery, StaticPageQueryVariables>(StaticPageDocument, {...variables, ...(metaData.pageParam ?? {})})(),
-      ...restOptions
-    }
-  })()
-    )};
-
-useInfiniteStaticPageQuery.getKey = (variables: StaticPageQueryVariables) => ['StaticPage.infinite', variables];
-
-
-useStaticPageQuery.fetcher = (variables: StaticPageQueryVariables, options?: RequestInit['headers']) => fetchData<StaticPageQuery, StaticPageQueryVariables>(StaticPageDocument, variables, options);
