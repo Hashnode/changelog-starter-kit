@@ -15,7 +15,11 @@ import { formatDate } from '@/utils/consts/format-date';
 
 const host = process.env.NEXT_PUBLIC_HASHNODE_PUBLICATION_HOST as string;
 
-export default function BlogContent({ params }: { params: { slug: string } }) {
+export default function ChangelogContent({
+  params,
+}: {
+  params: { slug: string };
+}) {
   const { data, error } = useQuery({
     queryKey: usePostQuery.getKey({
       host,
